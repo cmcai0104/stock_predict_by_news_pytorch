@@ -7,6 +7,7 @@ import re
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 from transformers import BertTokenizer
+from tqdm import notebook, trange
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -38,6 +39,7 @@ def data_preprocess(path="./data/history_news.txt", deadline='15:00:00'):
     Returns: DataFrame
 
     """
+    print('Reading the history news data!')
     df = pd.read_csv(path, sep="#split#", engine='python', encoding='utf-8')
     df = df.drop(columns=['modified_time', 'news_content'])
     df = df.astype(
@@ -92,6 +94,19 @@ def daily_filter(daily_df: pd.DataFrame, tokenizer: BertTokenizer, max_sent_num:
 
 
 def data_split(df, tokenizer, max_sent_num, max_sent_length, batch_size):
+    """
+    Spliting the DataFrame into training, validation and test. Encoding the texts by tokenizer,
+    and create the masks and sentences length list at the same time.
+    Args:
+        df: Dataframe
+        tokenizer: encoder tokenizer
+        max_sent_num: max sentence number
+        max_sent_length: max sentence length
+        batch_size:
+
+    Returns: Dataloader, sentences_length(inclouding training, validation and test)
+    """
+    print('Encoding texts by tokenizer, and splitting the dataset into training, valid and test......')
     texts_train = []
     texts_valid = []
     texts_test = []
@@ -147,7 +162,6 @@ def data_split(df, tokenizer, max_sent_num, max_sent_length, batch_size):
     test_data = TensorDataset(texts_test, atten_masks_test, labels_test)
     test_sampler = RandomSampler(test_data)
     test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=batch_size)
-
     return train_dataloader, sentences_length_train, valid_dataloader, sentences_length_valid, test_dataloader, sentences_length_test
 
 
@@ -165,7 +179,6 @@ def load_checkpoint(load_path, model, device):
         return
     state_dict = torch.load(load_path, map_location=device)
     print(f'Model loaded from <== {load_path}')
-
     model.load_state_dict(state_dict['model_state_dict'])
     return state_dict['valid_loss']
 
@@ -197,10 +210,12 @@ def training_history_plot(plt_save_path, destination_folder, device):
     plt.legend()
     plt.savefig(plt_save_path)
     plt.show()
+    print('The training and valid loss curves have already saved to ==> {plt_save_path}')
 
 
-def train(model, optimizer, train_loader, valid_loader, train_epochs, file_path, device, eval_every=None,
+def train(model, optimizer, train_loader, valid_loader, train_epochs, save_file_path, device, eval_every=None,
           best_valid_loss=float("Inf")):
+    print('Start training the model!')
     if eval_every is None:
         eval_every = len(train_loader) // 2
     running_loss = 0.0
@@ -211,11 +226,12 @@ def train(model, optimizer, train_loader, valid_loader, train_epochs, file_path,
     global_steps_list = []
 
     model.train()
-    for epoch in range(train_epochs):
-        for (labels, title, text, titletext), _ in train_loader:
-            labels = labels.type(torch.LongTensor).to(device)
-            titletext = titletext.type(torch.LongTensor).to(device)
-            loss, _ = model(titletext, labels)
+    for epoch in trange(int(train_epochs), desc='Epoch'):
+        for _, batch in enumerate(notebook.tqdm(train_loader)):
+            batch = tuple(t.to(device) for t in batch)
+            input_ids, input_mask, label_ids = batch
+            y_predict = model(input_ids, input_mask)
+            loss = torch.nn.functional.mse_loss(y_predict, label_ids)
 
             optimizer.zero_grad()
             loss.backward()
@@ -228,10 +244,11 @@ def train(model, optimizer, train_loader, valid_loader, train_epochs, file_path,
             if global_step % eval_every == 0:
                 model.eval()
                 with torch.no_grad():
-                    for (labels, title, text, titletext), _ in valid_loader:
-                        labels = labels.type(torch.LongTensor).to(device)
-                        titletext = titletext.type(torch.LongTensor).to(device)
-                        loss, _ = model(titletext, labels)
+                    for _, batch in enumerate(valid_loader):
+                        batch = tuple(t.to(device) for t in batch)
+                        input_ids, input_mask, label_ids = batch
+                        y_predict = model(input_ids, input_mask)
+                        loss = torch.nn.functional.mse_loss(y_predict, label_ids)
                         valid_running_loss += loss.item()
                 average_train_loss = running_loss / eval_every
                 average_valid_loss = valid_running_loss / len(valid_loader)
@@ -252,14 +269,15 @@ def train(model, optimizer, train_loader, valid_loader, train_epochs, file_path,
                                                                                                average_valid_loss))
                 if best_valid_loss > average_valid_loss:
                     best_valid_loss = average_valid_loss
-                    save_checkpoint(file_path + '/model.pt', model, best_valid_loss)
-                    save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
+                    save_checkpoint(save_file_path + '/model.pt', model, best_valid_loss)
+                    save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
 
-    save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
+    save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
     print('Finished Training!')
 
 
 def evaluate(model, test_loader, device):
+    print('Start evaluating the model!')
     y_pred = []
     y_true = []
 

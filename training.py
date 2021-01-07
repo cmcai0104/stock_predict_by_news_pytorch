@@ -11,7 +11,7 @@ from torch.nn.utils import clip_grad_norm_
 from transformers import BertTokenizer, AdamW
 from transformers import get_linear_schedule_with_warmup
 from neural_network import FinBertTransformer
-from base_functions import data_preprocess, data_split
+from base_functions import data_preprocess, data_split, train
 
 if __name__ == '__main__':
     MAX_SENT_LENGTH = 50
@@ -24,25 +24,28 @@ if __name__ == '__main__':
     RANDOM_SEED = 333
     GRADIENT_ACCUMULATION_STEPS = 1
     WARMUP_PROPORTION = 0.1
-    global_step=0
-    print('Reading the history news data......')
+    global_step = 0
     df = data_preprocess(path="./data/history_news.txt", deadline='15:00:00')
-    print('Encoding texts by tokenizer, and spliting the datasets into training, valid and test......')
     model_path = './pretrained_models/FinBERT_L-12_H-768_A-12_pytorch'
     tokenizer = BertTokenizer.from_pretrained(model_path)
-    train_dataloader, _, valid_dataloader, _, test_dataloader, _ = data_split(df, tokenizer=tokenizer, max_sent_num=MAX_SENT_NUM,
-                                                                                max_sent_length=MAX_SENT_LENGTH, batch_size=BATCH_SIZE)
+    train_dataloader, _, valid_dataloader, _, test_dataloader, _ = data_split(df, tokenizer=tokenizer,
+                                                                              max_sent_num=MAX_SENT_NUM,
+                                                                              max_sent_length=MAX_SENT_LENGTH,
+                                                                              batch_size=BATCH_SIZE)
     del df
-    print('Building the model and load pretrained parameters......')
+    print('Building the model and load pre-trained parameters......')
     model = FinBertTransformer(pretrain_path=model_path, sents_num=MAX_SENT_NUM, sent_hidden=[96, 24],
                                nhead=1, num_layers=1, news_hidden=[12, 1])
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=EPSILION)
+    train(model=model, optimizer=optimizer, train_loader=train_dataloader, valid_loader=valid_dataloader,
+          train_epochs=EPOCHS, save_file_path='./model', device=device)
+
     total_steps = len(train_dataloader) * EPOCHS
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=total_steps)
     model.train()
-    print('Starting training the model......')
+
     for i in trange(int(EPOCHS), desc='Epoch'):
         train_loss = 0
         nb_tr_examples, nb_tr_steps = 0, 0
@@ -51,7 +54,7 @@ if __name__ == '__main__':
             input_ids, input_mask, label_ids = batch
             del batch
             y_predict = model(input_ids, input_mask)
-            loss =  torch.nn.functional.mse_loss(y_predict, label_ids)
+            loss = torch.nn.functional.mse_loss(y_predict, label_ids)
             if GRADIENT_ACCUMULATION_STEPS > 1:
                 loss = loss / GRADIENT_ACCUMULATION_STEPS
             loss.backward()
@@ -88,7 +91,7 @@ if __name__ == '__main__':
 
         with torch.no_grad():
             y_predict = model(input_ids, input_mask, labels=None)
-        tmp_valid_loss =  torch.nn.functional.mse_loss(y_predict, label_ids)
+        tmp_valid_loss = torch.nn.functional.mse_loss(y_predict, label_ids)
         eval_loss += tmp_valid_loss.mean().item()
         nb_eval_steps += 1
         if len(preds) == 0:
@@ -109,5 +112,3 @@ if __name__ == '__main__':
         for key in (result.keys()):
             logger.info("  %s = %s", key, str(result[key]))
             writer.write("%s = %s\n" % (key, str(result[key])))
-
-    
