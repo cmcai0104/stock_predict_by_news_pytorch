@@ -7,6 +7,8 @@ import re
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 from transformers import BertTokenizer
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def affected_date(series: pd.Series, trade_dates: pd.Series, deadline='15:00:00'):
@@ -147,3 +149,137 @@ def data_split(df, tokenizer, max_sent_num, max_sent_length, batch_size):
     test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=batch_size)
 
     return train_dataloader, sentences_length_train, valid_dataloader, sentences_length_valid, test_dataloader, sentences_length_test
+
+
+def save_checkpoint(save_path, model, valid_loss):
+    if save_path is None:
+        return
+    state_dict = {'model_state_dict': model.state_dict(),
+                  'valid_loss': valid_loss}
+    torch.save(state_dict, save_path)
+    print(f'Model saved to ==> {save_path}')
+
+
+def load_checkpoint(load_path, model, device):
+    if load_path is None:
+        return
+    state_dict = torch.load(load_path, map_location=device)
+    print(f'Model loaded from <== {load_path}')
+
+    model.load_state_dict(state_dict['model_state_dict'])
+    return state_dict['valid_loss']
+
+
+def save_metrics(save_path, train_loss_list, valid_loss_list, global_steps_list):
+    if save_path is None:
+        return
+    state_dict = {'train_loss_list': train_loss_list,
+                  'valid_loss_list': valid_loss_list,
+                  'global_steps_list': global_steps_list}
+    torch.save(state_dict, save_path)
+    print(f'Model saved to ==> {save_path}')
+
+
+def load_metrics(load_path, device):
+    if load_path is None:
+        return
+    state_dict = torch.load(load_path, map_location=device)
+    print(f'Model loaded from <== {load_path}')
+    return state_dict['train_loss_list'], state_dict['valid_loss_list'], state_dict['global_steps_list']
+
+
+def training_history_plot(plt_save_path, destination_folder, device):
+    train_loss_list, valid_loss_list, global_steps_list = load_metrics(destination_folder + '/metrics.pt', device)
+    plt.plot(global_steps_list, train_loss_list, label='Train')
+    plt.plot(global_steps_list, valid_loss_list, label='Valid')
+    plt.xlabel('Global Steps')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.savefig(plt_save_path)
+    plt.show()
+
+
+def train(model, optimizer, train_loader, valid_loader, train_epochs, file_path, device, eval_every=None,
+          best_valid_loss=float("Inf")):
+    if eval_every is None:
+        eval_every = len(train_loader) // 2
+    running_loss = 0.0
+    valid_running_loss = 0.0
+    global_step = 0
+    train_loss_list = []
+    valid_loss_list = []
+    global_steps_list = []
+
+    model.train()
+    for epoch in range(train_epochs):
+        for (labels, title, text, titletext), _ in train_loader:
+            labels = labels.type(torch.LongTensor).to(device)
+            titletext = titletext.type(torch.LongTensor).to(device)
+            loss, _ = model(titletext, labels)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+            global_step += 1
+
+            # evaluation step
+            if global_step % eval_every == 0:
+                model.eval()
+                with torch.no_grad():
+                    for (labels, title, text, titletext), _ in valid_loader:
+                        labels = labels.type(torch.LongTensor).to(device)
+                        titletext = titletext.type(torch.LongTensor).to(device)
+                        loss, _ = model(titletext, labels)
+                        valid_running_loss += loss.item()
+                average_train_loss = running_loss / eval_every
+                average_valid_loss = valid_running_loss / len(valid_loader)
+                train_loss_list.append(average_train_loss)
+                valid_loss_list.append(average_valid_loss)
+                global_steps_list.append(global_step)
+
+                running_loss = 0.0
+                valid_running_loss = 0.0
+                model.train()
+
+                print(
+                    'Epoch [{}/{}], Step [{}/{}], Train Loss:{:.4f}, Valid Loss:{:.4f}'.format(epoch + 1, train_epochs,
+                                                                                               global_step,
+                                                                                               train_epochs * len(
+                                                                                                   train_loader),
+                                                                                               average_train_loss,
+                                                                                               average_valid_loss))
+                if best_valid_loss > average_valid_loss:
+                    best_valid_loss = average_valid_loss
+                    save_checkpoint(file_path + '/model.pt', model, best_valid_loss)
+                    save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
+
+    save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
+    print('Finished Training!')
+
+
+def evaluate(model, test_loader, device):
+    y_pred = []
+    y_true = []
+
+    model.eval()
+    with torch.no_grad():
+        for (labels, title, text, titletext), _ in test_loader:
+            labels = labels.type(torch.LongTensor).to(device)
+            titletext = titletext.type(torch.LongTensor).to(device)
+            loss, _ = model(titletext, labels)
+            y_pred.extend(torch.argmax(loss, 1).tolist())
+            y_true.extend(labels.tolist())
+
+    print('Classification Report:')
+    print(classification_report(y_true, y_pred, label=[1, 0], digits=4))
+
+    cm = confusion_matrix(y_true, y_pred, labels=[1, 0])
+    ax = plt.subplot()
+    sns.heatmap(cm, annot=True, ax=ax, cmap='Blues', fmt='d')
+    ax.set_title()
+    ax.set_xlabel()
+    ax.set_ylabel()
+    ax.xaxis.set_ticklabels(['FAKE', 'REAL'])
+    ax.yaxis.set_ticklabels(['FAKE', 'REAL'])

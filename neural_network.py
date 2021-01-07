@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 class FinBertTransformer(nn.Module):
     def __init__(self, pretrain_path='./pretrained_models/FinBERT_L-12_H-768_A-12_pytorch',
-                 sents_num=50, sent_hidden=[192, 48], nhead=8, num_layers=6, news_hidden=[48, 1]):
+                 sents_num=50, sent_hidden=[96, 24], nhead=8, num_layers=6, news_hidden=[24, 1]):
         super(FinBertTransformer, self).__init__()
         self.sents_num = sents_num
         self.sent_hidden = sent_hidden
