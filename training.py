@@ -28,8 +28,8 @@ if __name__ == '__main__':
     torch.manual_seed(SEED)
     torch.cuda.manual_seed(SEED)
 
-    MAX_SENT_LENGTH = 50
-    MAX_SENT_NUM = 50
+    MAX_NEWS_LENGTH = 50
+    MAX_NEWS_NUM = 128
     BATCH_SIZE = 2
     EPOCHS = 10
     LEARNING_RATE = 2e-5
@@ -44,12 +44,12 @@ if __name__ == '__main__':
     print('Loading BERT tokenizer from <==', model_path)
     tokenizer = BertTokenizer.from_pretrained(model_path)
     train_dataloader, valid_dataloader, test_dataloader = data_split(df, tokenizer=tokenizer,
-                                                                     max_news_num=MAX_SENT_NUM,
-                                                                     max_news_length=MAX_SENT_LENGTH,
+                                                                     max_news_num=MAX_NEWS_NUM,
+                                                                     max_news_length=MAX_NEWS_LENGTH,
                                                                      batch_size=BATCH_SIZE)
     del df
-    print('Building the model and load pre-trained parameters......')
-    model = FinBertTransformer(pretrain_path=model_path, sents_num=MAX_SENT_NUM, sent_hidden=[96, 24],
+    print('Building the model and load pre-trained parameters from <==', model_path)
+    model = FinBertTransformer(pretrain_path=model_path, sents_num=MAX_NEWS_NUM, sent_hidden=[96, 24],
                                nhead=1, num_layers=1, news_hidden=[12, 1])
 
     model.to(device)
@@ -57,8 +57,12 @@ if __name__ == '__main__':
     total_steps = len(train_dataloader) * EPOCHS
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=total_steps)
 
-    train(model=model, optimizer=optimizer, train_loader=train_dataloader, valid_loader=valid_dataloader,
-          train_epochs=EPOCHS, save_file_path='./model', device=device)
+    train(model=model, optimizer=optimizer, scheduler=scheduler, epochs=EPOCHS,
+          train_dataloader=train_dataloader, valid_dataloader=valid_dataloader, device=device)
+
+    train(model=model, optimizer=optimizer, train_loader=train_dataloader,
+          valid_loader=valid_dataloader, train_epochs=EPOCHS,
+          save_file_path='./model', device=device)
 
     model.train()
 

@@ -2,9 +2,11 @@
 import numpy as np
 import pandas as pd
 import tushare as ts
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 import re
 import torch
+from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 from transformers import BertTokenizer
 from tqdm import notebook, trange
@@ -117,6 +119,8 @@ def data_split(df, tokenizer, max_news_num, max_news_length, batch_size):
     Returns: Dataloader, sentences_length(inclouding training, validation and test)
     """
     print('Encoding texts by tokenizer, and splitting the dataset into training, valid and test......')
+    news_num_list = []
+    news_length_list = []
     train_input_ids = []
     valid_input_ids = []
     test_input_ids = []
@@ -131,24 +135,34 @@ def data_split(df, tokenizer, max_news_num, max_news_length, batch_size):
         input_id, att_mask, news_num, news_length = daily_filter(daily_df, tokenizer=tokenizer,
                                                                  max_news_num=max_news_num,
                                                                  max_news_length=max_news_length)
+        news_num_list.append(news_num)
+        news_length_list.append(news_length)
         if daily_df['affected_date'].unique()[0] < np.datetime64('2020-01-01'):
             train_input_ids.append(input_id)
             train_att_masks.append(att_mask)
             train_labels.append(daily_df['pct_chg'].unique() / 10)
         elif daily_df['affected_date'].unique()[0] < np.datetime64('2020-07-01'):
-            train_input_ids.append(input_id)
-            train_att_masks.append(att_mask)
-            train_labels.append(daily_df['pct_chg'].unique() / 10)
+            valid_input_ids.append(input_id)
+            valid_att_masks.append(att_mask)
+            valid_labels.append(daily_df['pct_chg'].unique() / 10)
         else:
-            train_input_ids.append(input_id)
-            train_att_masks.append(att_mask)
-            train_labels.append(daily_df['pct_chg'].unique() / 10)
+            test_input_ids.append(input_id)
+            test_att_masks.append(att_mask)
+            test_labels.append(daily_df['pct_chg'].unique() / 10)
 
+    print("Maximum length of news's title is %s, we just take the first %s words." % (
+        max(news_length_list), max_news_length))
+    print("The day with the most news releases was %s, we just take the top %s." % (max(news_num_list), max_news_num))
     train_dataloader = generate_dataloader(train_input_ids, train_att_masks, train_labels, batch_size)
     valid_dataloader = generate_dataloader(valid_input_ids, valid_att_masks, valid_labels, batch_size)
     test_dataloader = generate_dataloader(test_input_ids, test_att_masks, test_labels, batch_size)
 
     return train_dataloader, valid_dataloader, test_dataloader
+
+
+def format_time(elapsed):
+    elapsed_rounded = int(round(elapsed))
+    return str(timedelta(seconds=elapsed_rounded))
 
 
 def save_checkpoint(save_path, model, valid_loss):
@@ -191,6 +205,7 @@ def training_history_plot(plt_save_path, destination_folder, device):
     train_loss_list, valid_loss_list, global_steps_list = load_metrics(destination_folder + '/metrics.pt', device)
     plt.plot(global_steps_list, train_loss_list, label='Train')
     plt.plot(global_steps_list, valid_loss_list, label='Valid')
+    plt.title('Training and Validation loss of the model')
     plt.xlabel('Global Steps')
     plt.ylabel('Loss')
     plt.legend()
@@ -199,7 +214,63 @@ def training_history_plot(plt_save_path, destination_folder, device):
     print('The training and valid loss curves have already saved to ==> {plt_save_path}')
 
 
-def train(model, optimizer, train_loader, valid_loader, train_epochs, save_file_path, device, eval_every=None,
+def train(model, optimizer, scheduler, epochs, train_dataloader, valid_dataloader, device):
+    train_loss_list = []
+    valid_loss_list = []
+    for epoch in range(epochs):
+        print("")
+        print('======== Epoch {:} / {:} ========'.format(epoch + 1, epochs))
+        print('Training...')
+        t0 = time.time()
+        total_loss = 0
+        model.train()
+        for step, train_batch in enumerate(train_dataloader):
+            if step % 10 == 0 and not step == 0:
+                elapsed = format_time(time.time() - t0)
+                print('  Batch {:>5,}  of  {:>5,}.    Elapsed: {:}.'.format(step, len(train_dataloader), elapsed))
+            train_batch = tuple(inp.to(device) for inp in train_batch)
+            input_ids, input_mask, label_ids = train_batch
+            y_predict = model(input_ids, input_mask)
+            loss = torch.nn.functional.mse_loss(y_predict, label_ids)
+            total_loss += loss.item()
+            optimizer.zero_grad()
+            loss.backward()
+            # clip the norm of the gradients to 1.0, to help prevent the "exploding gradients".
+            clip_grad_norm_(model.parameters(), 1.0)
+            optimizer.step()
+            scheduler.step()
+        avg_train_loss = total_loss / len(train_dataloader)
+        train_loss_list.append(avg_train_loss)
+        print("")
+        print("  Average training loss: {0:.2f}".format(avg_train_loss))
+        print("  Training epcoh took: {:}".format(format_time(time.time() - t0)))
+
+        print("")
+        print("Running Validation...")
+        t0 = time.time()
+        model.eval()
+        total_loss = 0
+        nb_eval_steps, nb_eval_examples = 0, 0
+        for step, valid_batch in enumerate(valid_dataloader):
+            valid_batch = tuple(inp.to(device) for inp in valid_batch)
+            input_ids, input_mask, label_ids = valid_batch
+            with torch.no_grad():
+                y_predict = model(input_ids, input_mask)
+                loss = torch.nn.functional.mse_loss(y_predict, label_ids)
+            total_loss += loss.item()
+            avg_valid_loss = total_loss / len(valid_dataloader)
+            valid_loss_list.append(avg_valid_loss)
+            # Track the number of batches
+            nb_eval_steps += 1
+        print("  Accuracy: {0:.2f}".format(total_loss / nb_eval_steps))
+        print("  Validation took: {:}".format(format_time(time.time() - t0)))
+    print("")
+    print("Training complete!")
+
+
+
+
+def train1(model, optimizer, train_loader, valid_loader, train_epochs, save_file_path, device, eval_every=None,
           best_valid_loss=float("Inf")):
     print('Start training the model!')
     if eval_every is None:

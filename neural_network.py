@@ -11,8 +11,8 @@ class FinBertTransformer(nn.Module):
         self.sents_num = sents_num
         self.sent_hidden = sent_hidden
         self.pretrain_model = BertModel.from_pretrained(pretrain_path)
-        #transform_encoderlayer = nn.TransformerEncoderLayer(d_model=768, nhead=nhead)
-        #self.transformer_encoder = nn.TransformerEncoder(transform_encoderlayer, num_layers=num_layers)
+        # transform_encoderlayer = nn.TransformerEncoderLayer(d_model=768, nhead=nhead)
+        # self.transformer_encoder = nn.TransformerEncoder(transform_encoderlayer, num_layers=num_layers)
         self.sh_fc1 = nn.Linear(768, sent_hidden[0])
         self.sh_dropout1 = nn.Dropout(0.2)
         self.sh_fc2 = nn.Linear(sent_hidden[0], sent_hidden[1])
@@ -35,10 +35,8 @@ class FinBertTransformer(nn.Module):
         x = pooler_output.view(-1, self.sents_num, 768)
         x = F.leaky_relu(self.sh_fc1(self.sh_dropout1(x)))
         x = F.leaky_relu(self.sh_fc2(self.sh_dropout2(x)))
-        #x = self.transformer_encoder(x)
+        # x = self.transformer_encoder(x)
         x = x.view(-1, self.sents_num * self.sent_hidden[-1])
         x = F.leaky_relu(self.nh_fc1(self.nh_dropout1(x)))
         x = self.act(self.nh_fc2(self.nh_dropout2(x)))
         return x
-
-
