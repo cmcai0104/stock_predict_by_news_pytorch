@@ -7,6 +7,7 @@ torchvision==0.8.2
 torchaudio===0.7.2
 pytorch_transformers==1.2.0
 transformers==4.1.1
+keras==2.4.3
 tqdm==4.54.1
 loguru==0.5.3
 ipywidgets==7.6.2
