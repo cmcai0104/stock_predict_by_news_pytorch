@@ -214,7 +214,9 @@ def training_history_plot(plt_save_path, destination_folder, device):
     print('The training and valid loss curves have already saved to ==> {plt_save_path}')
 
 
-def train(model, optimizer, scheduler, epochs, train_dataloader, valid_dataloader, device):
+def train(model, optimizer, scheduler, epochs, train_dataloader, valid_dataloader, device, save_file_path='./training_information'):
+    print('Start training the model!')
+    best_valid_loss = float("Inf")
     train_loss_list = []
     valid_loss_list = []
     for epoch in range(epochs):
@@ -243,7 +245,7 @@ def train(model, optimizer, scheduler, epochs, train_dataloader, valid_dataloade
         train_loss_list.append(avg_train_loss)
         print("")
         print("  Average training loss: {0:.2f}".format(avg_train_loss))
-        print("  Training epcoh took: {:}".format(format_time(time.time() - t0)))
+        print("  Training epoch took: {:}".format(format_time(time.time() - t0)))
 
         print("")
         print("Running Validation...")
@@ -262,98 +264,35 @@ def train(model, optimizer, scheduler, epochs, train_dataloader, valid_dataloade
             valid_loss_list.append(avg_valid_loss)
             # Track the number of batches
             nb_eval_steps += 1
-        print("  Accuracy: {0:.2f}".format(total_loss / nb_eval_steps))
-        print("  Validation took: {:}".format(format_time(time.time() - t0)))
+        print("  Average validation loss: {0:.2f}".format(total_loss / nb_eval_steps))
+        print("  Validation epoch took: {:}".format(format_time(time.time() - t0)))
+
+        if best_valid_loss > avg_valid_loss:
+            best_valid_loss = avg_valid_loss
+            save_checkpoint(save_file_path + '/model.pt', model, best_valid_loss)
+            save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list,  range(epochs))
+    save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list, range(epochs))
     print("")
     print("Training complete!")
 
 
-
-
-def train1(model, optimizer, train_loader, valid_loader, train_epochs, save_file_path, device, eval_every=None,
-          best_valid_loss=float("Inf")):
-    print('Start training the model!')
-    if eval_every is None:
-        eval_every = len(train_loader) // 2
-    running_loss = 0.0
-    valid_running_loss = 0.0
-    global_step = 0
-    train_loss_list = []
-    valid_loss_list = []
-    global_steps_list = []
-
-    model.train()
-    for epoch in trange(int(train_epochs), desc='Epoch'):
-        for _, train_batch in enumerate(notebook.tqdm(train_loader)):
-            train_batch = tuple(t.to(device) for t in train_batch)
-            input_ids, input_mask, label_ids = train_batch
-            y_predict = model(input_ids, input_mask)
-            loss = torch.nn.functional.mse_loss(y_predict, label_ids)
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item()
-            global_step += 1
-
-            # evaluation step
-            if global_step % eval_every == 0:
-                model.eval()
-                with torch.no_grad():
-                    for _, valid_batch in enumerate(valid_loader):
-                        valid_batch = tuple(t.to(device) for t in valid_batch)
-                        input_ids, input_mask, label_ids = valid_batch
-                        y_predict = model(input_ids, input_mask)
-                        loss = torch.nn.functional.mse_loss(y_predict, label_ids)
-                        valid_running_loss += loss.item()
-                average_train_loss = running_loss / eval_every
-                average_valid_loss = valid_running_loss / len(valid_loader)
-                train_loss_list.append(average_train_loss)
-                valid_loss_list.append(average_valid_loss)
-                global_steps_list.append(global_step)
-
-                running_loss = 0.0
-                valid_running_loss = 0.0
-                model.train()
-
-                print(
-                    'Epoch [{}/{}], Step [{}/{}], Train Loss:{:.4f}, Valid Loss:{:.4f}'.format(epoch + 1, train_epochs,
-                                                                                               global_step,
-                                                                                               train_epochs * len(
-                                                                                                   train_loader),
-                                                                                               average_train_loss,
-                                                                                               average_valid_loss))
-                if best_valid_loss > average_valid_loss:
-                    best_valid_loss = average_valid_loss
-                    save_checkpoint(save_file_path + '/model.pt', model, best_valid_loss)
-                    save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
-
-    save_metrics(save_file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
-    print('Finished Training!')
-
-
-def evaluate(model, test_loader, device):
-    print('Start evaluating the model!')
-    y_pred = []
-    y_true = []
-
+def evaluate(model, test_dataloader, device):
+    # Prediction on test set
+    print('Predicting returns on that day based on news begin on July 1, 2020.')
+    # Put model in evaluation mode
     model.eval()
-    with torch.no_grad():
-        for _, batch in enumerate(test_loader):
-            batch = tuple(t.to(device) for t in batch)
-            input_ids, input_mask, label_ids = batch
-            y_predict = model(input_ids, input_mask)
-            y_pred.extend(y_predict.tolist())
-            y_true.extend(label_ids.tolist())
+    # Tracking variables
+    pred_y, true_y = [], []
+    # Predict
+    for _, test_batch in enumerate(test_dataloader):
+        batch = tuple(inp.to(device) for inp in test_batch)
+        input_ids, input_mask, label_ids = batch
+        with torch.no_grad():
+            y_pred = model(input_ids, attention_mask=input_mask)
+        y_pred = y_pred.detach().cpu().numpy()
+        label_ids = label_ids.to('cpu').numpy()
+        pred_y.extend(y_pred)
+        true_y.extend(label_ids)
 
-    # print('Classification Report:')
-    # print(classification_report(y_true, y_pred, label=[1, 0], digits=4))
-    # cm = confusion_matrix(y_true, y_pred, labels=[1, 0])
-    # ax = plt.subplot()
-    # sns.heatmap(cm, annot=True, ax=ax, cmap='Blues', fmt='d')
-    # ax.set_title()
-    # ax.set_xlabel()
-    # ax.set_ylabel()
-    # ax.xaxis.set_ticklabels(['FAKE', 'REAL'])
-    # ax.yaxis.set_ticklabels(['FAKE', 'REAL'])
+
+    print('DONE.')
