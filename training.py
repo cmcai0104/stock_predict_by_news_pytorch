@@ -11,7 +11,7 @@ from torch.nn.utils import clip_grad_norm_
 from transformers import BertTokenizer, AdamW
 from transformers import get_linear_schedule_with_warmup
 from neural_network import FinBertTransformer
-from base_functions import data_preprocess, data_split, train
+from base_functions import data_preprocess, data_split, train, evaluate
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -27,18 +27,17 @@ if __name__ == '__main__':
     np.random.seed(SEED)
     torch.manual_seed(SEED)
     torch.cuda.manual_seed(SEED)
-
-    MAX_NEWS_LENGTH = 50
+    
+    EPOCHS = 100
+    BATCH_SIZE = 16
+    MAX_NEWS_LENGTH = 70
     MAX_NEWS_NUM = 128
-    BATCH_SIZE = 2
-    EPOCHS = 10
-    LEARNING_RATE = 2e-5
-    WEIGHT_DECAY = 1e-2
     EPSILION = 1e-8
-    RANDOM_SEED = 333
-    GRADIENT_ACCUMULATION_STEPS = 1
+    LEARNING_RATE = 2e-5
+
+    WEIGHT_DECAY = 1e-2
     WARMUP_PROPORTION = 0.1
-    global_step = 0
+
     df = data_preprocess(path="./data/history_news.txt", deadline='15:00:00')
     model_path = './pretrained_models/FinBERT_L-12_H-768_A-12_pytorch'
     print('Loading BERT tokenizer from <==', model_path)
@@ -51,13 +50,11 @@ if __name__ == '__main__':
     print('Building the model and load pre-trained parameters from <==', model_path)
     model = FinBertTransformer(pretrain_path=model_path, sents_num=MAX_NEWS_NUM, sent_hidden=[96, 24],
                                nhead=1, num_layers=1, news_hidden=[12, 1])
-
     model.to(device)
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=EPSILION)
     total_steps = len(train_dataloader) * EPOCHS
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=total_steps)
-
     train(model=model, optimizer=optimizer, scheduler=scheduler, epochs=EPOCHS,
           train_dataloader=train_dataloader, valid_dataloader=valid_dataloader, device=device)
-
+    evaluate(model=model, test_dataloader=test_dataloader, device=device)
 
