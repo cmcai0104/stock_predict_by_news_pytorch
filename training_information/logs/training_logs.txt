@@ -1,0 +1,5 @@
+nohup: 忽略输入
+/home/python/work_direction/project/stock_predict_by_news_pytorch/venv/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() > 0
+No GPU available, using the CPU instead.
+Reading the history news data!
