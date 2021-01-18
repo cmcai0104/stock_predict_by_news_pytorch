@@ -1,0 +1,1025 @@
+There are 1 GPU(s) available.
+We will use the GPu: GeForce RTX 3090
+
+Reading the history news data!
+Loading BERT tokenizer from <== ./work/pretrained_models/FinBERT_L-12_H-768_A-12_pytorch
+Encoding texts by tokenizer, and splitting the dataset into training, valid and test......
+Maximum length of news's title is 59, we just take the first 60 words.
+The day with the most news releases was 2211, we just take the top 20.
+Building the model and load pre-trained parameters from <== ./work/pretrained_models/FinBERT_L-12_H-768_A-12_pytorch
+
+
+Start training the model!
+
+======== Epoch 1 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.03153
+ Training epoch took: 0:00:51
+
+Running Validation...
+ Average validation loss: 0.01768
+ Validation epoch took: 0:00:01
+Model saved to ==> ./work/training_information/model.pt
+Model saved to ==> ./work/training_information/metrics.pt
+
+======== Epoch 2 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02388
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01836
+ Validation epoch took: 0:00:01
+
+======== Epoch 3 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02386
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01960
+ Validation epoch took: 0:00:01
+
+======== Epoch 4 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:48.
+ Average training loss: 0.02357
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01916
+ Validation epoch took: 0:00:01
+
+======== Epoch 5 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:48.
+ Average training loss: 0.02327
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01787
+ Validation epoch took: 0:00:01
+
+======== Epoch 6 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:48.
+ Average training loss: 0.02305
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01709
+ Validation epoch took: 0:00:01
+Model saved to ==> ./work/training_information/model.pt
+Model saved to ==> ./work/training_information/metrics.pt
+
+======== Epoch 7 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02340
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02110
+ Validation epoch took: 0:00:01
+
+======== Epoch 8 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02299
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01752
+ Validation epoch took: 0:00:01
+
+======== Epoch 9 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02289
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01950
+ Validation epoch took: 0:00:01
+
+======== Epoch 10 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02284
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01736
+ Validation epoch took: 0:00:01
+
+======== Epoch 11 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02320
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01767
+ Validation epoch took: 0:00:01
+
+======== Epoch 12 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02224
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01779
+ Validation epoch took: 0:00:01
+
+======== Epoch 13 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02224
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01915
+ Validation epoch took: 0:00:01
+
+======== Epoch 14 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02258
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01847
+ Validation epoch took: 0:00:01
+
+======== Epoch 15 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02175
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01774
+ Validation epoch took: 0:00:01
+
+======== Epoch 16 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02131
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01789
+ Validation epoch took: 0:00:01
+
+======== Epoch 17 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02125
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01957
+ Validation epoch took: 0:00:01
+
+======== Epoch 18 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.02042
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01976
+ Validation epoch took: 0:00:01
+
+======== Epoch 19 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01939
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01770
+ Validation epoch took: 0:00:01
+
+======== Epoch 20 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01855
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01886
+ Validation epoch took: 0:00:01
+
+======== Epoch 21 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01859
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01858
+ Validation epoch took: 0:00:01
+
+======== Epoch 22 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01580
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01992
+ Validation epoch took: 0:00:01
+
+======== Epoch 23 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01422
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01940
+ Validation epoch took: 0:00:01
+
+======== Epoch 24 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01349
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02035
+ Validation epoch took: 0:00:01
+
+======== Epoch 25 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01227
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01777
+ Validation epoch took: 0:00:01
+
+======== Epoch 26 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01129
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01824
+ Validation epoch took: 0:00:01
+
+======== Epoch 27 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.01090
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01840
+ Validation epoch took: 0:00:01
+
+======== Epoch 28 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00941
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01921
+ Validation epoch took: 0:00:01
+
+======== Epoch 29 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00832
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01861
+ Validation epoch took: 0:00:01
+
+======== Epoch 30 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00811
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02744
+ Validation epoch took: 0:00:01
+
+======== Epoch 31 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00775
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01955
+ Validation epoch took: 0:00:01
+
+======== Epoch 32 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00628
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01770
+ Validation epoch took: 0:00:01
+
+======== Epoch 33 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00690
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01824
+ Validation epoch took: 0:00:01
+
+======== Epoch 34 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00647
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01830
+ Validation epoch took: 0:00:01
+
+======== Epoch 35 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00600
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01884
+ Validation epoch took: 0:00:01
+
+======== Epoch 36 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00547
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01948
+ Validation epoch took: 0:00:01
+
+======== Epoch 37 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00559
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02189
+ Validation epoch took: 0:00:01
+
+======== Epoch 38 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00508
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02312
+ Validation epoch took: 0:00:01
+
+======== Epoch 39 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00586
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02354
+ Validation epoch took: 0:00:01
+
+======== Epoch 40 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00500
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02689
+ Validation epoch took: 0:00:01
+
+======== Epoch 41 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00461
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02019
+ Validation epoch took: 0:00:01
+
+======== Epoch 42 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00509
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01826
+ Validation epoch took: 0:00:01
+
+======== Epoch 43 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00495
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02090
+ Validation epoch took: 0:00:01
+
+======== Epoch 44 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00431
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02272
+ Validation epoch took: 0:00:01
+
+======== Epoch 45 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00467
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02007
+ Validation epoch took: 0:00:01
+
+======== Epoch 46 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00449
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02047
+ Validation epoch took: 0:00:01
+
+======== Epoch 47 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00446
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01901
+ Validation epoch took: 0:00:01
+
+======== Epoch 48 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00472
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01961
+ Validation epoch took: 0:00:01
+
+======== Epoch 49 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00409
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01921
+ Validation epoch took: 0:00:01
+
+======== Epoch 50 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00400
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02051
+ Validation epoch took: 0:00:01
+
+======== Epoch 51 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00419
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01969
+ Validation epoch took: 0:00:01
+
+======== Epoch 52 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00394
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01998
+ Validation epoch took: 0:00:01
+
+======== Epoch 53 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00468
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01868
+ Validation epoch took: 0:00:01
+
+======== Epoch 54 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00383
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01842
+ Validation epoch took: 0:00:01
+
+======== Epoch 55 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00421
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02062
+ Validation epoch took: 0:00:01
+
+======== Epoch 56 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00367
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01853
+ Validation epoch took: 0:00:01
+
+======== Epoch 57 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00371
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01939
+ Validation epoch took: 0:00:01
+
+======== Epoch 58 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00391
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02011
+ Validation epoch took: 0:00:01
+
+======== Epoch 59 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00403
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01849
+ Validation epoch took: 0:00:01
+
+======== Epoch 60 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00335
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02023
+ Validation epoch took: 0:00:01
+
+======== Epoch 61 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00368
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01857
+ Validation epoch took: 0:00:01
+
+======== Epoch 62 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00337
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01951
+ Validation epoch took: 0:00:01
+
+======== Epoch 63 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00323
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01880
+ Validation epoch took: 0:00:01
+
+======== Epoch 64 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00328
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01855
+ Validation epoch took: 0:00:01
+
+======== Epoch 65 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00341
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02888
+ Validation epoch took: 0:00:01
+
+======== Epoch 66 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00326
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01917
+ Validation epoch took: 0:00:01
+
+======== Epoch 67 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00327
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01804
+ Validation epoch took: 0:00:01
+
+======== Epoch 68 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00324
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01820
+ Validation epoch took: 0:00:01
+
+======== Epoch 69 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00357
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02056
+ Validation epoch took: 0:00:01
+
+======== Epoch 70 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00375
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02657
+ Validation epoch took: 0:00:01
+
+======== Epoch 71 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00304
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01853
+ Validation epoch took: 0:00:01
+
+======== Epoch 72 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00338
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02024
+ Validation epoch took: 0:00:01
+
+======== Epoch 73 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00347
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01932
+ Validation epoch took: 0:00:01
+
+======== Epoch 74 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00359
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01987
+ Validation epoch took: 0:00:01
+
+======== Epoch 75 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00325
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02156
+ Validation epoch took: 0:00:01
+
+======== Epoch 76 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00341
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01979
+ Validation epoch took: 0:00:01
+
+======== Epoch 77 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00411
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01891
+ Validation epoch took: 0:00:01
+
+======== Epoch 78 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00334
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01855
+ Validation epoch took: 0:00:01
+
+======== Epoch 79 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00340
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02195
+ Validation epoch took: 0:00:01
+
+======== Epoch 80 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00300
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01973
+ Validation epoch took: 0:00:01
+
+======== Epoch 81 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00345
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02293
+ Validation epoch took: 0:00:01
+
+======== Epoch 82 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00291
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01959
+ Validation epoch took: 0:00:01
+
+======== Epoch 83 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00316
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02109
+ Validation epoch took: 0:00:01
+
+======== Epoch 84 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00293
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02097
+ Validation epoch took: 0:00:01
+
+======== Epoch 85 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00352
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01876
+ Validation epoch took: 0:00:01
+
+======== Epoch 86 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00280
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01867
+ Validation epoch took: 0:00:01
+
+======== Epoch 87 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00306
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02120
+ Validation epoch took: 0:00:01
+
+======== Epoch 88 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00284
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02150
+ Validation epoch took: 0:00:01
+
+======== Epoch 89 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00306
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01874
+ Validation epoch took: 0:00:01
+
+======== Epoch 90 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00285
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01912
+ Validation epoch took: 0:00:01
+
+======== Epoch 91 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00264
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02120
+ Validation epoch took: 0:00:01
+
+======== Epoch 92 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00329
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01890
+ Validation epoch took: 0:00:01
+
+======== Epoch 93 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00273
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01872
+ Validation epoch took: 0:00:01
+
+======== Epoch 94 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00309
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01993
+ Validation epoch took: 0:00:01
+
+======== Epoch 95 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00286
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02143
+ Validation epoch took: 0:00:01
+
+======== Epoch 96 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00293
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01922
+ Validation epoch took: 0:00:01
+
+======== Epoch 97 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00292
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.02050
+ Validation epoch took: 0:00:01
+
+======== Epoch 98 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00295
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01927
+ Validation epoch took: 0:00:01
+
+======== Epoch 99 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00283
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01955
+ Validation epoch took: 0:00:01
+
+======== Epoch 100 / 100 ========
+Training...
+ Batch    80 of    88. Elapsed: 0:00:47.
+ Average training loss: 0.00302
+ Training epoch took: 0:00:52
+
+Running Validation...
+ Average validation loss: 0.01955
+ Validation epoch took: 0:00:01
+Model saved to ==> ./work/training_information/metrics.pt
+
+The training and valid loss curves have already saved to ==> {plt_save_path}
+
+Training complete!
+
+Predicting returns on that day based on news begin on July 1, 2020.
+  Average test loss: 0.02
+DONE.
